@@ -1,0 +1,52 @@
+{% extends 'manager_base.html' %}
+{% block content %}
+<div class="p-3">
+    <h3 class="m-3 fs-4 text-center text-secondary">朝霞事務所　在庫一覧</h3>
+    <p class="text-end">{% now "Y年m月d日 H:i" %} 現在</p>
+<table class="table table-bordered">
+    {% regroup data by device__service__name as service_list %}
+    <!-- TV,NET,TEL,その他でグループ化 -->
+    {% for service in service_list %}
+    <tr class="table-primary text-center fs-4">
+        <th colspan="4" scope="col">{{ service.grouper }}</th>
+    </tr>
+    {% regroup service.list by device__type__name as type_list %}
+    <!-- LINK,STB,無線,有線等のサービスタイプ毎にグループ化 -->
+    {% for type in type_list %}
+    <tr class="table-secondary">
+        <td>{{type.grouper}}</td>
+        <td></td>
+        <td class="h6">倉庫</td>
+        <td class="h6">持出</td>
+    </tr>
+    {% regroup type.list by device__name as device_list %}
+    <!-- 機種毎にグループ化 -->
+    {% for device in device_list %}
+    <tr>
+        <td></td>
+        <td><a href="../{{device.grouper}}/device_stock_list/">{{device.grouper}}</a></td>
+        <!-- 機種名の表示に在庫リストへのリンクを付ける -->
+
+        <!-- 以下、持出数・在庫数表示の式 -->
+        {% for device_data in device.list %}
+            {% if device.list|length == 1 %}
+            <!-- 機種毎に持出と在庫の両方が存在しているか確認　device.list|length == 1 は持出か在庫どちらかしかない場合 -->
+                {% if device_data.status == 1 %}
+                <!-- device_data.status == 1 は持出のみ存在する場合なので在庫数を<td>0</td>で埋める -->
+                    <td>{{device_data.device__count}}</td><td>0</td>
+                {% elif device_data.status == 2 %}
+                <!-- device_data.status == 2 は在庫のみ存在する場合なので持出数を<td>0</td>で埋める --> 
+                    <td>0</td><td>{{device_data.device__count}}</td> 
+                {% endif %}
+            {% else %}
+                <!-- 持出、在庫両方存在する場合 -->
+                <td>{{device_data.device__count}}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

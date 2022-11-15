@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block subtitle %}{{ subtitle }}{% endblock %}
+{% block area %}{{ area }}{% endblock %}
+{% block select_job %}<option value=''>{{ job }}</option>{% endblock %}
+{% block content %}
+<div class="list-group fs-4">
+    <a href="stocks/" class="list-group-item list-group-item-action text-center">在庫管理</a>
+    <!--<a href="/" class="list-group-item list-group-item-action text-center">連絡先リスト</a>-->
+    <a href="users/{{ request.user.id }}/update_profile/" class="list-group-item list-group-item-action text-center">プロフィール変更</a>
+</div>
+{% endblock content %}

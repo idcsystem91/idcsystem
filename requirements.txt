@@ -1,0 +1,10 @@
+Flake8
+autopep8
+gunicorn
+Django
+django-allauth
+django-bootstrap5
+django-bootstrap-icons
+django-import-export
+django-widget-tweaks
+django-crispy-forms

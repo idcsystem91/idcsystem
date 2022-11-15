@@ -1,0 +1,29 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ area }}{% endblock %}
+{% block subtitle %}{{ title }}{% endblock %}
+{% block content %}
+<div class="mt-5">
+    {% if device %}
+    <p>{{device}}<br />{{serial}} の出庫完了</p>
+    {% endif %}
+    {% if msg %}
+    <h3 class="text-danger">{{warning|safe}}</h3>
+    <p class="text-danger">{{msg|safe}}</p>
+    {% endif %}
+    <p>{{massage|safe}}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="w-50 mx-auto my-3">
+                <input type="submit" value="登録" class="btn btn-primary form-control mt-2">
+        </div>
+    </form>
+    <div class="pt-2 fs-5 text-center">
+        <a href="{% url 'instore' %}" class="text-decoration-none link-secondary">インスト出庫はこちら</a>
+    </div>
+    <div class="pt-5 fs-4 text-center">
+        <a href="stocks/" class="text-decoration-none link-secondary">在庫管理トップ</a>
+    </div>
+    
+</div>
+{% endblock %}

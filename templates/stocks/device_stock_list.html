@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ request.session.area }}{% endblock %}
+{% block subtitle %}在庫リスト{% endblock %}
+{% block content %}
+<div class="text-center"><h3>{{ device }}</h3></div>
+<table class="table table-striped">
+    {% for i in data %}
+    <tr>
+	<td>{{i.serial}}</td>
+        {% if i.staff__username %}
+		<td> {{i.staff__username}}</td>
+        {% else %}
+		<td>倉庫在庫</td> 
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+<div class="w-50 my-3 mx-auto">
+    <input class="btn btn-primary form-control" type="button" onclick="history.back(-1)" value="戻る">
+</div>
+{% endblock %}

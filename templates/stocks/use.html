@@ -1,0 +1,60 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ area }}{% endblock %}
+{% block subtitle %}{{title}}{% endblock %}
+
+{% block content %}
+<p class="text-center"><a href="../used_list/">登録済み端末一覧</a></p>
+<form class="mx-auto my-4 fs-4 form-control" action="{% url 'use' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <p>
+        <label for='customer'>顧客番号:</label>
+        <input type='text' class='form-control' id='customer' name='customer' pattern="[0-9]{8}" required>
+    </p>
+    <p>
+        <label for='use'>使用日:</label>
+        <input type='text' class='form-control' id='use' name='use' value='{% now "Y-m-d" %}' required>
+    </p>
+    <div class="mt-5 fs-3">
+        <p>現在の手持ち在庫</p>
+        {% if not data%}
+        <span class="alert alert-danger" role="alert">手持ちの在庫無し<br />出庫してください</span>
+        {% else %}
+        {% regroup data|dictsort:"device__service__sort_no" by device__service__name as service_list %}
+        <table>
+            {% for service in service_list %}
+            {% regroup service.list|dictsort:"device__type__sort_no" by device__type__name as type_list %}
+            {% for type in type_list %}
+            {% regroup type.list by device__name as device_list %}
+            {% for obj1 in device_list %}
+            <tr>
+                <td></td>
+                <td>
+                    {{obj1.grouper}}
+                </td>
+            </tr>
+            {% for obj2 in obj1.list %}
+            <tr>
+                <td></td>
+                <td><label><input type="checkbox" name="stock_id" value="{{obj2.id}}"> {{obj2.serial}}</label>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>&nbsp;</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+        </table>
+        {% endif %}
+        <div class="w-50 mx-auto my-3">
+            <input type="submit" value="登録" class="btn btn-primary form-control mt-2">
+        </div>
+    </div>
+</form>
+<div class="fs-4 text-center">
+    <a href="/stocks/" class="text-decoration-none link-secondary">在庫管理トップ</a>
+</div>
+{% endblock %}

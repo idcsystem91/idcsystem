@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+<table class="table">
+{% regroup data by use as use_list %}
+{% for use_device in use_list %}
+    <tr class="bg-secondary text-light"><td colspan="3">{{use_device.grouper}}</td></tr>
+
+    {% for dv in use_device.list %}
+    
+    <tr><td>{{dv.device}}</td><td><a href="../use_device_correct/{{dv.id}}/"> {{dv.serial}}</a></td><td>{{dv.customer}}</td></tr>
+    
+
+    {% endfor %}
+    <tr><td></td><td></td><td></td></tr>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% load static %}{% load django_bootstrap5 %}{% load bootstrap_icons %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>端末リスト</title>
+</head>
+
+<body class="bg-secondary">
+    <table class="table table-dark table-striped">
+    <tr>
+        <!-- <td>エリア</td>
+        <td>業種</td> -->
+        <td>機種</td>
+        <td>機器ID</td>
+        <td>入荷日</td>
+        <td>持出日</td>
+        <td>使用日</td>
+        <td>使用者</td>
+        <td>顧客番号</td>
+        <td>状態</td>
+        <!-- <td>コメント</td>
+        <td>ログ</td> -->
+    </tr>
+    {% for data in object_list %}
+    <tr>
+        <!-- <td>{{ data.area }}</td>
+        <td>{{ data.job }}</td> -->
+        <td>{{ data.device }}</td>
+        <td><a href="../update/{{data.id}}">{{ data.serial }}</a></td>
+        <td>{{ data.arrival }}</td>
+        <td>{{ data.delivery }}</td>
+        <td>{{ data.use }}</td>
+        <td>{{ data.staff }}</td>
+        <td>{{ data.customer }}</td>
+        <td>{{ data.status }}</td>
+        <!-- <td>{{ data.comment }}</td>
+        <td>{{ data.log }}</td> -->
+    </tr>
+    {% endfor %}
+</table>
+<!-- ページネーション用のUI -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <!-- 現在よりも前のページが存在する場合 -->
+            <a href="?page=1">&laquo; 先頭</a>
+            <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+        {% endif %}
+
+        <span class="current">
+            <!-- 現在のページ番号と、全ページ数を表示 -->
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <!-- 現在よりも後のページが存在する場合 -->
+            <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+</body>
+
+</html>

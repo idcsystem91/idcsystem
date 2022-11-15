@@ -1,0 +1,19 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockForm</title>
+</head>
+<body class="bg-secondary">
+    
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form layout="horizontal" %}
+        <input type="submit" class='btn btn-primary' value="登録">
+      </form>
+
+</body>
+</html>

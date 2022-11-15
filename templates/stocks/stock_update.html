@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ request.session.area }}{% endblock %}
+{% block subtitle %}登録修正{% endblock %}
+{% block content %}
+<form method="post">{% csrf_token %}
+    <table class="table">
+    {{ form.as_table }}
+    </table>
+    <div class="d-grid gap-2 col-6 mx-auto">
+    <input type="submit" value="Update">
+    </div>
+</form>
+{% endblock %}

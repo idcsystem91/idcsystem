@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block subtitle %}{{ title }}{% endblock %}
+{% block area %}{{ area }}{% endblock %}
+{% block content %}
+<!--在庫管理メニュー-->
+<div class="list-group fs-5 link-secondary">
+    <a href="delivery/" class="list-group-item list-group-item-action text-center">出庫登録</a>
+    <a href="use/" class="list-group-item list-group-item-action text-center">使用登録</a>
+    <a href="return/" class="list-group-item list-group-item-action text-center">返却登録</a>
+    <a href="find/" class="list-group-item list-group-item-action text-center">端末検索</a>
+    <a href="count/" class="list-group-item list-group-item-action text-center">在庫確認</a>
+    <a href="/" class="list-group-item list-group-item-action text-center">メインメニュー</a>
+</div>
+{% endblock content %}

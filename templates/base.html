@@ -1,0 +1,59 @@
+{% load static %}{% load django_bootstrap5 %}{% load bootstrap_icons %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link rel="stylesheet" href="{% static 'css/allauth.css' %}">
+
+    <title>IDC SYSTEM</title>
+</head>
+
+<body class="bg-secondary">
+    <div class="p-3">
+        <!--ヘッダー部表示-->
+        <div class="my-4 text-center text-light">
+            <h1>IDC SYSTEM</h1>
+            {% if request.user.is_authenticated %}
+                <!--ユーザーがログインしている時のみ下記表示する-->
+                <p class="fs-5">{{request.user.profile.last_name}} {{request.user.profile.first_name}}<br />
+                    {{request.user.username}} / {{request.user.profile.office}}事務所<br />
+                    [ {% block area %}{% endblock %}エリア ]</p>
+            {% endif %}
+        </div>
+        <!--ヘッダー表示ここまで-->
+
+        <!--コンテンツ表示エリア-->
+        <div class="p-4 mx-auto bg-white bg-gradient rounded-3" style="width: 100%; max-width: 400px;">
+
+            <!--コンテンツタイトル-->
+            <div class="mb-2 text-center text-secondary">
+                <h2 class="fs-2">{% block subtitle %}{% endblock %}</h2>
+            </div>
+
+            <!--コンテンツ内容-->
+            <div class="mt-3">
+                {% block content %}{% endblock %}
+            </div>
+
+        </div>
+        <!--コンテンツ表示エリアここまで-->
+
+        <!--ログアウトリンク（ユーザーログイン時のみ表示）-->
+        {% if request.user.is_authenticated %}
+        <div class="m-4 fs-4 text-center">
+            <a href="{% url 'account_logout'%}" class="text-decoration-none link-light">ログアウト</a>
+        </div>
+        {% endif %}
+
+        <!--フッター表示-->
+        <footer class="mt-3 fs-4 text-center text-light">&copy;2022 IDC inc.</footer>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+{% extends "manager_base.html" %}
+{% block subtitle %}{{ title }}{% endblock %}
+{% block area %}{{ area }}{% endblock %}
+{% block content %}
+<div class="p-3 bg-light">
+{% for article in stockdata_list %}
+<li>{{ article.serial }}</li>
+{% endfor %}
+</div>
+{% endblock %}

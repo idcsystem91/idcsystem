@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ request.session.area }}{% endblock %}
+{% block subtitle %}登録済端末<br />{{request.user.username}}{% endblock %}
+{% block content %}
+<table class="table">
+{% regroup data by use as device_list %}
+{% for devices in device_list %}
+<tr class="bg-secondary text-white">
+    <td colspan="3">{{devices.grouper}}</td>
+</tr>
+<tr>
+    <td>機種</td>
+    <td>機器ID</td>
+    <td>顧客番号</td>
+</tr>
+{% for device in devices.list %}
+<tr>
+    <td>{{device.device__name}}</td>
+    <td><a href="../use_device_correct/{{device.id}}/">{{device.serial}}</td>
+    <td>{{device.customer}}</td>
+</tr>
+{% endfor %}
+{% endfor %}    
+</table>
+<p class="text-center"><a href="../">在庫管理トップ</a></p>
+{% endblock %}

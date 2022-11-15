@@ -1,0 +1,84 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ request.session.area }}{% endblock %}
+{% block subtitle %}詳細情報{% endblock %}
+{% block content %}
+<div class="my-5 fs-5 bg-secondary">
+<table class="table table-sm table-striped">
+    <tr>
+        <td>エリア</td>
+        <td>{{ object.area }}</td>
+    </tr>
+    <tr>
+        <td>デバイス</td>
+        <td>{{ object.device }}</td>
+    </tr>
+    <tr>
+        <td>シリアル</td>
+        <td>{{ object.serial }}</td>
+    </tr>
+    <tr>
+        <td>入荷日</td>
+        <td>{{ object.arrival }}</td>
+    </tr>
+    <tr>
+        <td>持出日</td>
+        <td>
+            <!--Noneを表示させない為の処理-->
+            {% if object.delivery %}
+                {{ object.delivery }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>使用日</td>
+        <td>
+            {% if object.use %}
+                {{ object.use }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>使用者</td>
+        <td>
+            {% if object.staff %}
+                {{ object.staff.profile.last_name }} ({{object.staff}})
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>顧客番号</td>
+        <td>
+            {% if object.customer %}
+                {{ object.customer }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>状態</td>
+        <td>{{ object.status }}</td>
+    </tr>
+    <tr>
+        <td>コメント</td>
+        <td>{{ object.comment }}</td>
+    </tr>
+    <tr>
+        <td>ログ</td>
+        <td>{{ object.log }}</td>
+    </tr>
+</table>
+</div>
+<div class="w-50 mx-auto">
+    <input class="btn btn-primary form-control" type="button" onclick="history.back(-1)" value="戻る">
+    <!--<a class="btn btn-primary" role="button"onclick="history.back(-1)">戻る</a>
+    <button class="btn btn-primary" onclick="history.back(-1)">戻る</button>
+    -->
+</div>
+{% endblock %}

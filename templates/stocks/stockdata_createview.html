@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}
+{% block area %}{{ request.session.area }}{% endblock %}
+{% block subtitle %}入庫登録{% endblock %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-grid gap-2 col-6 my-4 mx-auto">
+        <input class="btn btn-outline-primary" type="submit" value="登録">
+    </div>
+</form>
+<div class="fs-4 text-center">
+    <a href="{% url 'index' %}" class="text-decoration-none link-secondary">在庫管理トップ</a>
+</div>
+
+{% endblock %}

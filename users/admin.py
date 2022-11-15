@@ -1,0 +1,68 @@
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.utils.translation import gettext_lazy as _
+from .models import User, Profile, Office, Area, Job, PhoneType
+
+
+@admin.register(Office)
+class AdminOffice(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Area)
+class AdminArea(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Job)
+class AdminJob(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PhoneType)
+class AdminPhoneType(admin.ModelAdmin):
+    pass
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    max_num = 1
+    can_delete = False
+
+
+class MyUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class MyUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'username')
+
+
+class MyUserAdmin(UserAdmin):
+    fieldsets = (
+        (None, {'fields': ('email', 'password', 'username')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
+    )
+    form = MyUserChangeForm
+    add_form = MyUserCreationForm
+    list_display = ('email', 'username', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    search_fields = ('email', 'username')
+    ordering = ('email',)
+    inlines = [ProfileInline]
+
+
+admin.site.register(User, MyUserAdmin)

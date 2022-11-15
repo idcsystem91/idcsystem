@@ -1,0 +1,33 @@
+{% extends 'manager_base.html' %}
+{% block content %}
+<body class="bg-light">
+    <div class="container">
+        <h3>IDC SYSTEM 棚卸し</h3>
+        <div class="mt-4">
+            <a class="btn btn-primary" href="{% url 'inventory_CSV_export' %}">CSV出力</a>
+        </div>
+        <div class="p-3" style="background-color: #fff">
+            <table class='table table-striped'>
+            <tr>
+                <th scope="col">機種名</th>
+                <th scope="col">ID</th> 
+                <th scope="col">持出</th>
+                <th scope="col">状態</th>
+            </tr>
+            {% for device in data %}
+                <tr>
+                    <td>{{device.device }}</td>
+                    <td>{{ device.serial }}</td>
+                    <td>{% if device.staff %}
+                            {{ device.staff }}
+                        {% else %}
+                            -
+                        {% endif %}</td>
+                    <td>{{ device.status }}</td>
+                </tr>
+            {% endfor %}
+            <tr><td>end</td><td>end</td><td>end</td><td>end</td></tr>
+        </table>
+    </div>
+    </div>
+    {% endblock  %}

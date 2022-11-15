@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load crispy_forms_tags %}
+{% block title %}プロフィール編集{% endblock %}
+{% block content %}
+<div class="m-4">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="w-75 mx-auto">
+            <input type="hidden" name="user" value={{user.id}}>
+            {{ form|crispy }}
+            <button class="mt-5 btn btn-primary form-control" type="submit">登録</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
