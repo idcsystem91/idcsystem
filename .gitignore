@@ -2,3 +2,6 @@
 .git.backup
 db_BackUP
 CSV_DATA
+config/
+db.sqlite3
+__pycache_*
