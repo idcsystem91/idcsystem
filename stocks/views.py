@@ -30,17 +30,21 @@ class Index(LoginRequiredMixin, TemplateView):
 
 """ジェネリックビュー基本一式"""
 
+
 class StockList(LoginRequiredMixin, ListView):
     model = StockData
     paginate_by: int = 50
 
+
 class StockDetail(LoginRequiredMixin, DetailView):
     model = StockData
+
 
 class StockCreate(LoginRequiredMixin, CreateView):
     template_name = "stocks/stockdata_form.html"
     form_class = StockForm
     success_url = reverse_lazy("list")
+
 
 class StockUpdate(LoginRequiredMixin, UpdateView):
     template_name = "stocks/stockdata_form.html"
@@ -48,19 +52,25 @@ class StockUpdate(LoginRequiredMixin, UpdateView):
     form_class = StockForm
     success_url = reverse_lazy("list")
 
+
 class StockDelete(LoginRequiredMixin, DeleteView):
-    model =StockData
-    success_url = reverse_lazy("list") 
+    model = StockData
+    success_url = reverse_lazy("list")
+
 
 """ジェネリックビュー基本一式ここまで"""
 
 
 """マネージャー専用ページ"""
+
+
 class ManagerIndex(TemplateView):
     template_name = "stocks/manager_index.html"
 
+
 class ManagerStockList(StockList):
     template_name = "stocks/manager_stock_list.html"
+
 
 class ManagerStockCount(TemplateView):
     template_name = 'stocks/manager_stock_count.html'
@@ -72,7 +82,6 @@ class ManagerStockCount(TemplateView):
         return context
 
 
-
 """マネージャー専用ページここまで"""
 
 
@@ -82,7 +91,7 @@ class StockInStoreView(CreateView):
     form_class = StockDataCreateForm
     success_url = reverse_lazy("instore")
     template_name: str = "stocks/stockdata_createview.html"
-    
+
     def get_initial(self):
         initial = super().get_initial()
         initial["area"] = "練馬"
@@ -93,10 +102,12 @@ class StockInStoreView(CreateView):
 
 class DefectiveList(StockList):
     """不良品リスト（ジェネリックビューのListを継承）"""
+
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
         queryset = StockData.objects.filter(status__status_name="不良")
         return queryset
+
 
 class CreateView(LoginRequiredMixin, CreateView):
     form_class = StockDataCreateForm
@@ -106,10 +117,11 @@ class CreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('create', kwargs={'pk': self.object.pk})
 
+
 class UseDeviceUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "stocks/stock_update.html"
     model = StockData
-    fields = ['serial', 'use', 'customer' ,'status']
+    fields = ['serial', 'use', 'customer', 'status']
     success_url = reverse_lazy("used_list")
 
     def get_form(self):
@@ -119,6 +131,7 @@ class UseDeviceUpdateView(LoginRequiredMixin, UpdateView):
         form.fields['customer']
         form.fields['status']
         return form
+
 
 class DeliveryView(LoginRequiredMixin, TemplateView):
     """在庫持出処理クラス"""
@@ -181,6 +194,7 @@ class DeliveryView(LoginRequiredMixin, TemplateView):
 
         return render(request, 'stocks/delivery.html', self.context)
 
+
 class UseView(LoginRequiredMixin, TemplateView):
     """在庫持出処理クラス"""
 
@@ -225,13 +239,13 @@ class UseView(LoginRequiredMixin, TemplateView):
 
         return render(request, 'stocks/use.html', self.context)
 
+
 class ReturnView(LoginRequiredMixin, TemplateView):
 
     def __init__(self):
         self.context = {
             'title': "返却登録",
         }
-        
 
     def get(self, request):
         staff_id = self.request.user
@@ -245,7 +259,7 @@ class ReturnView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         now = timezone.now()
         date = now.strftime('%Y-%m-%d')
-        status_id = request.POST.get('status') 
+        status_id = request.POST.get('status')
         stock_id_list = request.POST.getlist('stock_id')
 
         for stock_id in stock_id_list:
@@ -256,7 +270,7 @@ class ReturnView(LoginRequiredMixin, TemplateView):
             obj.log += "○ " + date + ":" + str(self.request.user) + "が返却 "
             obj.save()
             self.context['device'] = obj.device
-            self.context['serial'] = obj.serial 
+            self.context['serial'] = obj.serial
 
         staff_id = self.request.user
         status = 2  # status_id 2 は持出済状態
@@ -265,6 +279,7 @@ class ReturnView(LoginRequiredMixin, TemplateView):
         self.context['data'] = data
 
         return render(request, 'stocks/return.html', self.context)
+
 
 class FindView(LoginRequiredMixin, TemplateView):
     """在庫検索"""
@@ -295,9 +310,11 @@ class FindView(LoginRequiredMixin, TemplateView):
 
         return render(request, 'stocks/find.html', self.context)
 
+
 class StockDataDetailView(LoginRequiredMixin, DetailView):
     model = StockData
     template_name = 'stocks/detail.html'
+
 
 class StockDataListView(ListView):
     template_name = "stocks/admin_stockdata_list.html"
@@ -318,6 +335,7 @@ class StockDataListView(ListView):
 #        context['annotate_data'] = annotate_data
 #        return context
 
+
 class StockDataFormView(FormView):
     template_name = "stocks/admin_stockdata_update.html"
     form_class = StockDataListForm
@@ -329,6 +347,7 @@ class StockDataFormView(FormView):
         form.send_email()
         return super().form_valid(form)
 
+
 class StockDataCountView(TemplateView):
     template_name = 'stocks/data_count.html'
 
@@ -337,6 +356,7 @@ class StockDataCountView(TemplateView):
         context['data'] = StockData.objects.filter(Q(status__status_name='在庫') | Q(status__status_name='持出')).order_by('device__service', 'device__type', 'device__name', 'status').values(
             'device__service__name', 'device__type__name', 'device__name', 'status').annotate(Count('device'))
         return context
+
 
 class StockDataDeviceStockListView(TemplateView):
 
@@ -347,9 +367,10 @@ class StockDataDeviceStockListView(TemplateView):
         device = self.kwargs.get('device')
         context['device'] = device
         context['data'] = StockData.objects.filter(
-                device__name=device, status__status_name__in=['在庫','持出']).values('serial','staff__username').order_by('staff__username')
+            device__name=device, status__status_name__in=['在庫', '持出']).values('serial', 'staff__username').order_by('staff__username')
 
         return context
+
 
 class UsedDeviceListView(TemplateView):
     template_name = 'stocks/list.html'
@@ -363,38 +384,45 @@ class UsedDeviceListView(TemplateView):
         ).values('id', 'use', 'customer', 'device__name', 'serial').order_by('-use', 'customer', 'device__id')
         return context
 
+
 class UserDeviceUpdate(StockUpdate):
-    form_class = StockForm 
+    form_class = StockForm
 
 
 """ 棚卸し用CSVファイル生成 """
+
+
 class InventoryCSVExport(ListView):
     template_name = 'stocks/inventory_list.html'
     model = StockData
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['data'] = StockData.objects.filter(status__status_name__in=['在庫','持出']).order_by('device')
+        context['data'] = StockData.objects.filter(
+            status__status_name__in=['在庫', '持出', '不良']).order_by('device')
 
         return context
 
+
 def inventory_CSV_export(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition']='attachment; filename="asaka.csv"'
+    response['Content-Disposition'] = 'attachment; filename="asaka.csv"'
     writer = csv.writer(response)
     writer.writerow([""])
     for device in StockData.objects.filter(
-       status__status_name__in=['在庫','持出'] 
+        status__status_name__in=['在庫', '持出']
     ):
         writer.writerow([device.serial])
     return response
 
+
 class UsedDevice(TemplateView):
     template_name = 'stocks/use_device_list.html'
     model = StockData
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         staff = self.request.user
-        context["data"] = StockData.objects.filter(staff=staff, status__status_name__in=['設置']).order_by("use", "customer").reverse()
+        context["data"] = StockData.objects.filter(staff=staff, status__status_name__in=[
+                                                   '設置']).order_by("use", "customer").reverse()
         return context
-    
